@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
+            $table->boolean('answer');
+            $table->unsignedBigInteger('email_id'); 
+            $table->foreign('email_id')->references('id')->on('emails');   
+            $table->unsignedBigInteger('dep_id'); 
+            $table->foreign('dep_id')->references('id')->on('departments');            
             $table->timestamps();
         });
     }

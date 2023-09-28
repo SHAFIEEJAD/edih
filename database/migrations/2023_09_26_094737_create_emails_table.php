@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('test_id');
+            $table->string('title');
+            $table->string('subject');
+            $table->longText('body');
+            $table->boolean('is_correct');            
+            $table->boolean('active');            
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('test_id')->references('id')->on('tests');
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

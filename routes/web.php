@@ -20,6 +20,9 @@ Route::get('/', function () {
 Route::get('/control-panel', function () {
     return inertia('admin/index');
 });
+Route::get('/control-panel/users', function () {
+    return inertia('admin/user/index');
+});
 Route::get('/control-panel/user/create', function () {
     return inertia('admin/user/create');
 });

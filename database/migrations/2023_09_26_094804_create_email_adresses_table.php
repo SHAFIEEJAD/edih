@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_adresses', function (Blueprint $table) {
-            $table->id();
+            $table->id();            
+            $table->unsignedBigInteger('email_id');
+            $table->smallInteger('type');
+            $table->string('address');
+            $table->string('display_name');            
+            $table->foreign('email_id')->references('id')->on('emails');
             $table->timestamps();
         });
     }
