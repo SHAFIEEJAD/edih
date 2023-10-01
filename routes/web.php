@@ -29,6 +29,9 @@ Route::get('/control-panel', function () {
 Route::get('/control-panel/users', [AdminController::class, 'index'])->name('user.index');
 Route::get('/control-panel/user/create', [AdminController::class, 'create']);
 Route::post('/control-panel/user/store', [AdminController::class, 'store']);
+Route::get('/control-panel/user/{user}/edit', [AdminController::class, 'edit']);
+Route::get('/control-panel/user/{user}/activate', [AdminController::class, 'activate']);
+Route::delete('/control-panel/user/{user}', [AdminController::class, 'destroy']);
 // Route::get('/', function () {
 //     return inertia('create');
 // });
