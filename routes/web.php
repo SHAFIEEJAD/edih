@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TestManagementController;
 
 use Inertia\Inertia;
@@ -17,45 +19,54 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return inertia('create');
-});
-Route::get('/control-panel', function () {
-    return inertia('create');
-});
-
-
 Route::inertia('login', 'Auth/Login')->name('login');
+Route::post('login', [LoginController::class, 'store'])->name('login.post');
+Route::post('control-panel/logout', [LoginController::class, 'destroy'])->name('logout');
 
-// Route::get('/control-panel/user/add', function () {
-//     return inertia('admin/user/add');
-// });
+// Protected Routes
+Route::group(['middleware' => 'auth'], function () {
 
-// User Management Routes
-Route::get('/control-panel/users', [AdminController::class, 'index'])->name('user.index');
-Route::get('/control-panel/user/create', [AdminController::class, 'create']);
-Route::post('/control-panel/user/store', [AdminController::class, 'store']);
-Route::get('/control-panel/user/{user}/edit', [AdminController::class, 'edit']);
-Route::get('/control-panel/user/{user}/activate', [AdminController::class, 'activate']);
-Route::delete('/control-panel/user/{user}', [AdminController::class, 'destroy']);
+    Route::get('/', function () {
 
-// Test Management Routes
-Route::get('/control-panel/tests', [TestManagementController::class, 'index'])->name('test.index');
-Route::get('/control-panel/test/create', [TestManagementController::class, 'create']);
-Route::post('/control-panel/test/store', [TestManagementController::class, 'store']);
-Route::get('/control-panel/test/{test}/edit', [TestManagementController::class, 'edit']);
-Route::get('/control-panel/test/{test}/activate', [TestManagementController::class, 'activate']);
-Route::delete('/control-panel/test/{test}', [TestManagementController::class, 'destroy']);
+        // if (auth()->check()) {
+        //     dd(auth()->user());
+        // }
 
-// Route::get('/', function () {
-//     return inertia('create');
-// });
-// Route::get('/', function () {
-//     return inertia('create');
-// });
-// Route::get('/', function () {
-//     return inertia('create');
-// });
-// Route::get('/', function () {
-//     return inertia('create');
-// });
+        return inertia('create');
+    });
+    Route::get('/control-panel', function () {
+
+        // if (auth()->check()) {
+        //     dd(auth()->user());
+        // }
+
+        return inertia('create');
+    });
+
+
+    // User Management Routes
+    Route::get('/control-panel/users', [AdminController::class, 'index'])->name('user.index');
+    Route::get('/control-panel/user/create', [AdminController::class, 'create']);
+    Route::post('/control-panel/user/store', [AdminController::class, 'store']);
+    Route::get('/control-panel/user/{user}/edit', [AdminController::class, 'edit']);
+    Route::get('/control-panel/user/{user}/activate', [AdminController::class, 'activate']);
+    Route::delete('/control-panel/user/{user}', [AdminController::class, 'destroy']);
+
+    // Test Management Routes
+    Route::get('/control-panel/tests', [TestManagementController::class, 'index'])->name('test.index');
+    Route::get('/control-panel/test/create', [TestManagementController::class, 'create']);
+    Route::post('/control-panel/test/store', [TestManagementController::class, 'store']);
+    Route::get('/control-panel/test/{test}/edit', [TestManagementController::class, 'edit']);
+    Route::get('/control-panel/test/{test}/activate', [TestManagementController::class, 'activate']);
+    Route::delete('/control-panel/test/{test}', [TestManagementController::class, 'destroy']);
+
+    // Email Management Routes
+    Route::get('/control-panel/emails', [EmailController::class, 'index'])->name('email.index');
+    Route::get('/control-panel/email/create', [EmailController::class, 'create']);
+    Route::post('/control-panel/email/store', [EmailController::class, 'store']);
+    Route::get('/control-panel/email/{email}/edit', [EmailController::class, 'edit']);
+    Route::get('/control-panel/email/{email}/activate', [EmailController::class, 'activate']);
+    Route::delete('/control-panel/email/{email}', [EmailController::class, 'destroy']);
+ 
+});
+

@@ -3,5 +3,7 @@
 </script>
 
 <template>
-    <h1>Hey There!</h1>
+    
+<h2 class="display-2"> A Home Page </h2>
+
 </template>
