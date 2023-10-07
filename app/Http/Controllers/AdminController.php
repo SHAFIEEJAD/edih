@@ -47,12 +47,49 @@ class AdminController extends Controller
             ]);
         }
     }
-    public function edit(){
-        
+    public function edit(User $user)
+    {
+        $user_data = User::find($user['id']);
+        return inertia::render('admin/user/edit', [
+            'user' => $user_data,
+        ]); 
     }
-    public function destroy(User $user, Redirector $redirector){
+    public function update(Request $request, User $user, Redirector $redirector){
+        try {
 
-     // Authorization (Example, modify based on your requirements)
+            $validated= $request->validate([
+                'username' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'role' => 'required|numeric',
+                'active' => 'boolean'
+            ]);
+
+            $user->update($validated);
+
+            return $redirector->route('user.index')->with([
+                'message' => 'User updated successfully',
+                'type' => 'success'
+            ]);
+
+        } catch (ValidationException $e) {
+            return back()->with([
+                'message' => 'An error occurred while updating the user.' .  $e->getMessage(),
+                'type' => 'error'
+            ]);        
+        
+        } catch (Exception $e) {
+            return back()->with([
+                'message' => 'An error occurred while updating the user.',
+                'type' => 'error'
+            ]);
+        }
+    }
+
+    public function destroy(User $user, Redirector $redirector)
+
+    {
+    // Authorization (Example, modify based on your requirements)
     // if (!auth()->user()->can('delete', $user)) {
     //     return response()->json(['message' => 'Unauthorized'], 403);
     // }

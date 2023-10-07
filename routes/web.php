@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/control-panel/user/create', [AdminController::class, 'create']);
     Route::post('/control-panel/user/store', [AdminController::class, 'store']);
     Route::get('/control-panel/user/{user}/edit', [AdminController::class, 'edit']);
+    Route::post('/control-panel/user/{user}/update', [AdminController::class, 'update']);
     Route::get('/control-panel/user/{user}/activate', [AdminController::class, 'activate']);
     Route::delete('/control-panel/user/{user}', [AdminController::class, 'destroy']);
 
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/control-panel/test/create', [TestManagementController::class, 'create']);
     Route::post('/control-panel/test/store', [TestManagementController::class, 'store']);
     Route::get('/control-panel/test/{test}/edit', [TestManagementController::class, 'edit']);
+    Route::post('/control-panel/test/{test}/update', [TestManagementController::class, 'update']);
     Route::get('/control-panel/test/{test}/activate', [TestManagementController::class, 'activate']);
     Route::delete('/control-panel/test/{test}', [TestManagementController::class, 'destroy']);
 
@@ -65,8 +67,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/control-panel/email/create', [EmailController::class, 'create']);
     Route::post('/control-panel/email/store', [EmailController::class, 'store']);
     Route::get('/control-panel/email/{email}/edit', [EmailController::class, 'edit']);
+    Route::post('/control-panel/email/{email}/update', [EmailController::class, 'update']);
     Route::get('/control-panel/email/{email}/activate', [EmailController::class, 'activate']);
     Route::delete('/control-panel/email/{email}', [EmailController::class, 'destroy']);
+    Route::put('/control-panel/email/{email}/test/{test}', [EmailController::class, 'changeTest']);
  
 });
 

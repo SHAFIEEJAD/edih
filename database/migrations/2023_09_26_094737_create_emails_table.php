@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('subject');
             $table->longText('body');
             $table->boolean('is_correct');            
-            $table->boolean('active');            
+            $table->boolean('active')->default(true);
+            $table->json('sender_address')->nullable();
+            $table->json('cc_addresses_list')->nullable();      
             $table->unsignedBigInteger('created_by');
             $table->foreign('test_id')->references('id')->on('tests');
             $table->foreign('created_by')->references('id')->on('users');
