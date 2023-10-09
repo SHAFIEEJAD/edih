@@ -57,15 +57,30 @@ class AdminController extends Controller
     public function update(Request $request, User $user, Redirector $redirector){
         try {
 
-            $validated= $request->validate([
+            $rules = [
                 'username' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed',
+                'email' => 'required|email|unique:users,email,'. $user->id ,
                 'role' => 'required|numeric',
-                'active' => 'boolean'
-            ]);
+                'active' => 'boolean',
+                'change_password' => 'boolean',
+            ];
 
-            $user->update($validated);
+            if ($request->input('change_password')) {
+                $rules['password'] = 'required|confirmed';
+            }
+        
+            $request->validate($rules);
+
+            $user->username = $request->input('username');
+            $user->email = $request->input('email');
+            $user->role = $request->input('role');
+            $user->active = $request->input('active');
+        
+            if ($request->input('change_password')) {
+                $user->password = bcrypt($request->input('password'));
+            }
+        
+            $user->save();
 
             return $redirector->route('user.index')->with([
                 'message' => 'User updated successfully',
@@ -80,7 +95,7 @@ class AdminController extends Controller
         
         } catch (Exception $e) {
             return back()->with([
-                'message' => 'An error occurred while updating the user.',
+                'message' => 'An error occurred while updating the user.' . $e->getMessage(),
                 'type' => 'error'
             ]);
         }

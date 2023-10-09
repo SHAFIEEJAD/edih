@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TestManagementController;
+use App\Http\Controllers\QuizzController;
 
 use Inertia\Inertia;
 
@@ -21,56 +23,52 @@ use Inertia\Inertia;
 
 Route::inertia('login', 'Auth/Login')->name('login');
 Route::post('login', [LoginController::class, 'store'])->name('login.post');
-Route::post('control-panel/logout', [LoginController::class, 'destroy'])->name('logout');
+Route::post('dashboard/logout', [LoginController::class, 'destroy'])->name('logout');
+
+// Guest Route for end-users
+Route::get('/', [QuizzController::class, 'index'])->middleware('guest'); 
 
 // Protected Routes
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware('auth')->prefix('/dashboard')->group(function () {
 
     Route::get('/', function () {
-
-        // if (auth()->check()) {
-        //     dd(auth()->user());
-        // }
-
-        return inertia('create');
+        return Inertia::render('admin/dashboard');
     });
-    Route::get('/control-panel', function () {
-
-        // if (auth()->check()) {
-        //     dd(auth()->user());
-        // }
-
-        return inertia('create');
-    });
-
 
     // User Management Routes
-    Route::get('/control-panel/users', [AdminController::class, 'index'])->name('user.index');
-    Route::get('/control-panel/user/create', [AdminController::class, 'create']);
-    Route::post('/control-panel/user/store', [AdminController::class, 'store']);
-    Route::get('/control-panel/user/{user}/edit', [AdminController::class, 'edit']);
-    Route::post('/control-panel/user/{user}/update', [AdminController::class, 'update']);
-    Route::get('/control-panel/user/{user}/activate', [AdminController::class, 'activate']);
-    Route::delete('/control-panel/user/{user}', [AdminController::class, 'destroy']);
+    Route::get('/users', [AdminController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [AdminController::class, 'create']);
+    Route::post('/user/store', [AdminController::class, 'store']);
+    Route::get('/user/{user}/edit', [AdminController::class, 'edit']);
+    Route::post('/user/{user}/update', [AdminController::class, 'update']);
+    Route::get('/user/{user}/activate', [AdminController::class, 'activate']);
+    Route::delete('/user/{user}', [AdminController::class, 'destroy']);
 
     // Test Management Routes
-    Route::get('/control-panel/tests', [TestManagementController::class, 'index'])->name('test.index');
-    Route::get('/control-panel/test/create', [TestManagementController::class, 'create']);
-    Route::post('/control-panel/test/store', [TestManagementController::class, 'store']);
-    Route::get('/control-panel/test/{test}/edit', [TestManagementController::class, 'edit']);
-    Route::post('/control-panel/test/{test}/update', [TestManagementController::class, 'update']);
-    Route::get('/control-panel/test/{test}/activate', [TestManagementController::class, 'activate']);
-    Route::delete('/control-panel/test/{test}', [TestManagementController::class, 'destroy']);
+    Route::get('/tests', [TestManagementController::class, 'index'])->name('test.index');
+    Route::get('/test/create', [TestManagementController::class, 'create']);
+    Route::post('/test/store', [TestManagementController::class, 'store']);
+    Route::get('/test/{test}/edit', [TestManagementController::class, 'edit']);
+    Route::post('/test/{test}/update', [TestManagementController::class, 'update']);
+    Route::get('/test/{test}/activate', [TestManagementController::class, 'activate']);
+    Route::delete('/test/{test}', [TestManagementController::class, 'destroy']);
 
     // Email Management Routes
-    Route::get('/control-panel/emails', [EmailController::class, 'index'])->name('email.index');
-    Route::get('/control-panel/email/create', [EmailController::class, 'create']);
-    Route::post('/control-panel/email/store', [EmailController::class, 'store']);
-    Route::get('/control-panel/email/{email}/edit', [EmailController::class, 'edit']);
-    Route::post('/control-panel/email/{email}/update', [EmailController::class, 'update']);
-    Route::get('/control-panel/email/{email}/activate', [EmailController::class, 'activate']);
-    Route::delete('/control-panel/email/{email}', [EmailController::class, 'destroy']);
-    Route::put('/control-panel/email/{email}/test/{test}', [EmailController::class, 'changeTest']);
+    Route::get('/emails', [EmailController::class, 'index'])->name('email.index');
+    Route::get('/email/create', [EmailController::class, 'create']);
+    Route::post('/email/store', [EmailController::class, 'store']);
+    Route::get('/email/{email}/edit', [EmailController::class, 'edit']);
+    Route::post('/email/{email}/update', [EmailController::class, 'update']);
+    Route::get('/email/{email}/activate', [EmailController::class, 'activate']);
+    Route::delete('/email/{email}', [EmailController::class, 'destroy']);
+    Route::put('/email/{email}/test/{test}', [EmailController::class, 'changeTest']);
  
+    // Department Management Routes
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
+    Route::get('/department/create', [DepartmentController::class, 'create']);
+    Route::post('/department/store', [DepartmentController::class, 'store']);
+    Route::post('/department/{department}/update', [DepartmentController::class, 'update']);
+    Route::delete('/department/{department}', [DepartmentController::class, 'destroy']);
+
 });
 

@@ -9,6 +9,13 @@ class Test extends Model
 {
     use HasFactory;
 
+    public function emails()
+    {
+        return $this->hasMany(Email::class);
+    }
+
+
+
     protected $fillable = [
         'title',
         'created_by',

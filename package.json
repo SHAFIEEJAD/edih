@@ -15,6 +15,7 @@
         "@popperjs/core": "^2.11.8",
         "@vitejs/plugin-vue": "^4.3.4",
         "@vueup/vue-quill": "^1.2.0",
+        "bootstrap-icons": "^1.11.1",
         "bootstrap5-tags": "^1.6.9",
         "vue": "^3.2.36"
     }
