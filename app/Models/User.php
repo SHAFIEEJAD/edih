@@ -45,4 +45,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getPermissionsAttribute(){
+        return [
+            'superadmin' => in_array($this->role, [1]),
+            'user_show' => in_array($this->role, [1,2]),
+            'user_manage' => in_array($this->role, [1,2]),
+            'test_show' => in_array($this->role, [1,2,3]),
+            'test_manage' => in_array($this->role, [1,2,3]),
+            'email_show' => in_array($this->role, [1,2,3]),
+            'email_manage' => in_array($this->role, [1,2,3]),
+            'department_show' => in_array($this->role, [1,2,3]),
+            'department_manage' => in_array($this->role, [1,2,3])
+        ];
+    }
 }

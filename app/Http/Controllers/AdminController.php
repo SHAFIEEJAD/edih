@@ -14,7 +14,16 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10); // Paginate with 10 users per page
+        if(! auth()->user()->permissions['user_manage']){
+            abort(403);
+        }
+
+        if(! auth()->user()->permissions['superadmin']){
+            $users = User::whereNotIn('role', [1])->paginate(10);
+        } else {
+            $users = User::paginate(10); 
+        }
+
         return Inertia::render('admin/user/index', ['users' => $users]);
     }
 
@@ -23,6 +32,10 @@ class AdminController extends Controller
     }
     public function store(Request $request, Redirector $redirector){
         try {
+
+            if((!auth()->user()->permissions['user_manage']) || ($$request['role'] == 1)){
+                abort(403);
+            }
 
             $validated= $request->validate([
                 'username' => 'required|max:255',
@@ -49,13 +62,26 @@ class AdminController extends Controller
     }
     public function edit(User $user)
     {
-        $user_data = User::find($user['id']);
-        return inertia::render('admin/user/edit', [
-            'user' => $user_data,
-        ]); 
+        if((! auth()->user()->permissions['user_manage']) || ($user['role'] == 1)){
+
+            abort(403);
+
+        } else {
+
+            $user_data = User::find($user['id']);
+            return inertia::render('admin/user/edit', [
+                'user' => $user_data,
+            ]);
+
+        }
+
     }
     public function update(Request $request, User $user, Redirector $redirector){
         try {
+
+            if((! auth()->user()->permissions['user_manage']) || ($request->input('role') == 1)){
+                abort(403);
+            }
 
             $rules = [
                 'username' => 'required|max:255',
@@ -104,47 +130,46 @@ class AdminController extends Controller
     public function destroy(User $user, Redirector $redirector)
 
     {
-    // Authorization (Example, modify based on your requirements)
-    // if (!auth()->user()->can('delete', $user)) {
-    //     return response()->json(['message' => 'Unauthorized'], 403);
-    // }
+        try {
+            if($user->role != 1){
+                $user->delete();
+            } else {
+                abort(403);
+            }
 
-    try {
-        $user->delete();
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
+            return $redirector->route('user.index')->with([
+                'message' => 'An error occurred while deleting the user.' . $e->getMessage() ,
+                'type' => 'error'
+            ]);
+        }
         return $redirector->route('user.index')->with([
-            'message' => 'An error occurred while deleting the user.',
-            'type' => 'error'
+            'message' => 'User deleted successfully',
+            'type' => 'success'
         ]);
-    }
-    return $redirector->route('user.index')->with([
-        'message' => 'User deleted successfully',
-        'type' => 'success'
-    ]);
 
     }
 
     public function activate(User $user, Redirector $redirector)
-{
-    // Check if the authenticated user is trying to activate themselves or a super admin
-    // if (auth()->user()->id === $user->id || $user->role == 1 ) {
-    if ( $user->role == 1 ) {
-            return $redirector->route('user.index')->with([
-            'message' => 'You do not have permission to perform this action.',
-            'type' => 'error'
+    {
+
+        if ( $user->role == 1 ) {
+                return $redirector->route('user.index')->with([
+                'message' => 'You do not have permission to perform this action.',
+                'type' => 'error'
+            ]);
+        }
+
+        // Proceed with activation logic
+        $user->active = ! $user->active;
+        $user->save();
+
+        return $redirector->route('user.index')->with([
+            'message' => 'User activation is switched successfully',
+            'type' => 'success'
         ]);
+
     }
-
-    // Proceed with activation logic
-    $user->active = true;
-    $user->save();
-
-    return $redirector->route('user.index')->with([
-        'message' => 'User activation is switched successfully',
-        'type' => 'success'
-    ]);
-
-}
 
 
 }

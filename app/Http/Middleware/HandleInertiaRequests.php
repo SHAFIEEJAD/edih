@@ -46,11 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'name' => auth()->user()->username ?? '',
                 'email' => auth()->user()->email ?? ''                
             ],
-            'permissions' => [
-                'user_edit' => in_array(auth()->id(), [1,2,3]),
-                'user_delete' => in_array(auth()->id(), [1,2,3]),
-                'user_activate' => in_array(auth()->id(), [1,2,3])
-            ]
+            'permissions' => auth()->user()->permissions ?? [],
         ]);
     }
 }
