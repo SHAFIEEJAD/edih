@@ -52,7 +52,10 @@ class AdminController extends Controller
             ]);
 
         } catch (ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
+            return back()->with([
+                'message' => 'An error occurred while Creating the user.' .  $e->getMessage(),
+                'type' => 'error'
+            ]);  
         } catch (Exception $e) {
             return back()->with([
                 'message' => 'An error occurred while creating the user.',

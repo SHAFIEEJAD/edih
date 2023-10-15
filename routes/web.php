@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
@@ -31,9 +32,7 @@ Route::get('/', [QuizzController::class, 'index'])->middleware('guest');
 // Protected Routes
 Route::middleware('auth')->prefix('/dashboard')->group(function () {
 
-    Route::get('/', function () {
-        return Inertia::render('admin/dashboard');
-    });
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // User Management Routes
     Route::get('/users', [AdminController::class, 'index'])->name('user.index');
