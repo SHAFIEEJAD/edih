@@ -15,4 +15,11 @@ class Answer extends Model
         return $this->belongsTo(Department::class, 'dep_id');
     }
 
+    protected $fillable = [
+        'email_id',
+        'answer',
+        'dep_id',
+    ];
+
+
 }

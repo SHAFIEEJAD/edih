@@ -27,7 +27,8 @@ Route::post('login', [LoginController::class, 'store'])->name('login.post');
 Route::post('dashboard/logout', [LoginController::class, 'destroy'])->name('logout');
 
 // Guest Route for end-users
-Route::get('/', [QuizzController::class, 'index'])->middleware('guest'); 
+Route::get('/', [QuizzController::class, 'index'])->middleware('guest')->name('quiz'); 
+Route::post('/store', [QuizzController::class, 'store'])->middleware('guest'); 
 
 // Protected Routes
 Route::middleware('auth')->prefix('/dashboard')->group(function () {
