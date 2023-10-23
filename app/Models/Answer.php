@@ -19,6 +19,7 @@ class Answer extends Model
         'email_id',
         'answer',
         'dep_id',
+        'answer_guid',
     ];
 
 

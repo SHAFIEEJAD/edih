@@ -12,7 +12,7 @@ use Inertia\Inertia;
 use Illuminate\Routing\Redirector;
 use Exception;
 use Illuminate\Validation\ValidationException;
-
+use Ramsey\Uuid\Uuid;
 
 class QuizzController extends Controller
 {
@@ -47,11 +47,14 @@ class QuizzController extends Controller
                 'answers.*.answer' => 'required|boolean|max:255', // Define the answer format
             ]);
 
+            $answer_guid = Uuid::uuid4()->toString();
+
             foreach ($validated['answers'] as $answerData) {
                 Answer::create([
                     'dep_id' => 1,
                     'email_id' => $answerData['id'],
                     'answer' => $answerData['answer'],
+                    'answer_guid' => $answer_guid
                 ]);
             }
 
